@@ -10,29 +10,28 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 
 </head>
-<body>
-<div class="container mt-4">
-<table class="table">
-<thead>
-	<tr>
-		<th>Id</th>
-		<th>Nombre</th>
-		<th>Actions</th>
-	</tr>
-</thead>
-<tbody>
-<c:forEach var="persona" items="${personas}">
-	<tr>
-		<td>${persona.name}</td>
-		<td>${persona.url}</td>
-		<td>
-			<a class="btn btn-warning">Editar</a>
-			<a class="btn btn-danger">Eliminar</a>
-		</td>
-	</tr>
-</c:forEach>
-</tbody>
-</table>
-</div>
+<body class="p-5">
+	<div class="mt-4">
+		<a href="/generacion?id=1" class="btn btn-primary">Gen 1</a>
+		<a href="/generacion?id=2" class="btn btn-primary">Gen 2</a>
+		<a href="/generacion?id=3" class="btn btn-primary">Gen 3</a>
+		<a href="/generacion?id=4" class="btn btn-primary">Gen 4</a>
+		<a href="/generacion?id=5" class="btn btn-primary">Gen 5</a>
+		<a href="/generacion?id=6" class="btn btn-primary">Gen 6</a>
+		<a href="/buscar" class="btn btn-success">Buscar por rango</a>
+		<a href="/buscarNombre" class="btn btn-success">Buscar por nombre o id</a>
+		<a href="/pokemons" class="btn btn-dark">Pokemonos almacenados</a>
+		<a href="/help" class="btn btn-dark">Help</a>
+	</div>
+	<div class="container mt-4">
+		<c:if test="${mensaje != null}">
+			<div class="alert text-center alert-info" role="alert">
+				${mensaje}
+			</div>
+		</c:if>
+		<h2 class=" text-center " >Bienvenido a mi prueba ... !!</h2>
+		<h2 class=" text-center " >Gracias por la oportunidad</h2>
+			
+	</div>
 </body>
 </html>

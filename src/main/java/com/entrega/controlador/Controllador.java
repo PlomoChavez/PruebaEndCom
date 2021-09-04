@@ -12,6 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
+import com.entrega.modelo.Almacenado;
 import com.entrega.modelo.Buscador;
 import com.entrega.modelo.BuscadorNombre;
 import com.entrega.modelo.Detalles;
@@ -33,8 +36,50 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 public class Controllador {
 	private String url = "https://pokeapi.co/api/v2/location";
+
 //	@Autowired
 //	private RestTemplate client;
+	@RequestMapping(value = "/agregar", params = "name")
+	public String formAgregar(@RequestParam String name, Model model) {
+		RestTemplate client = new RestTemplate();
+		HttpHeaders h = new HttpHeaders();
+		h.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+//		if(id == null) {id = "1";}
+		String tUrl = "https://pokeapi.co/api/v2/pokemon/" + name;
+		ResponseEntity<String> res = client.exchange(tUrl, HttpMethod.GET, null, String.class);
+		JSONObject jsonObj = new JSONObject(res.getBody().toString());
+		Almacenado pokemon = new Almacenado();
+
+
+		JSONObject colores = jsonObj.getJSONObject("types");
+		JSONObject ty = colores.getJSONObject("type");
+		pokemon.setTipo(ty.getString("name"));
+		pokemon.setId(jsonObj.getLong("id"));
+		Integer v = (int) (Math.random() * (50 - 99 + 1) + 99);
+		pokemon.setAtaque(v.toString());
+		pokemon.setEspecie(jsonObj.getString("name"));
+		v = (int) (Math.random() * (50 - 99 + 1) + 99);
+		pokemon.setDefensa(v.toString());
+		v = (int) (Math.random() * (50 - 99 + 1) + 99);
+		pokemon.setSalud(v.toString());
+		model.addAttribute("pokemon", pokemon);
+		model.addAttribute("name", "Agregando pokemon ...!!");
+		return "agregar";
+	}
+
+	@Autowired
+	private JdbcTemplate template;
+
+	@RequestMapping(value = "/agregar", method = RequestMethod.POST)
+	public String formAgregarPost(@ModelAttribute("pokemon") Almacenado item, Model model) {
+		String q = " INSERT INTO Pokemons (id,apodo,especie,tipo,ataque,defensa,salud) values " + "('"
+				+ item.getId()+ "','" + item.getApodo() + "','"+ item.getEspecie() + "','"
+				+ item.getTipo() + "','"+ item.getAtaque() + "','"+ item.getDefensa() + "','"+ item.getSalud()  + "')";
+		template.update(q);
+		model.addAttribute("mensaje", "Pokemon Agregado correctamente" + item.getApodo());
+		model.addAttribute("q", q);
+		return "index";
+	}
 
 	@RequestMapping(value = "/generacion", params = "id")
 	public String generaciones(@RequestParam String id, Model model) {
@@ -175,9 +220,12 @@ public class Controllador {
 		RestTemplate client = new RestTemplate();
 		HttpHeaders h = new HttpHeaders();
 		h.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-		ResponseEntity<String> res = client.exchange("https://pokeapi.co/api/v2/generation/1", HttpMethod.GET, null,
+		ResponseEntity<String> res = client.exchange("https://pokeapi.co/api/v2/pokemon/chespin", HttpMethod.GET, null,
 				String.class);
-		model.addAttribute("res", res.getBody().toString());
+		JSONObject tt = new JSONObject(res.getBody().toString());
+//		String r = res.getBody().toString();
+		String r = tt.get("types").toString();
+		model.addAttribute("res", r);
 //		return res.getBody();
 		return "pruebas";
 	}
@@ -187,5 +235,20 @@ public class Controllador {
 		Buscador bus = new Buscador();
 		model.addAttribute("buscador", bus);
 		return "buscar";
+	}
+	
+	@GetMapping("/help")
+	public String help(Model model) {
+		return "help";
+	}
+	@GetMapping("/pokemons")
+	public String pokemons(Model model) {
+		String sql = "SELECT *  FROM Pokemons";
+		List<Almacenado>pokemones = template.query(sql, new BeanPropertyRowMapper<Almacenado>(Almacenado.class));
+
+		model.addAttribute("pokemones", pokemones);
+		model.addAttribute("num", 1);
+		model.addAttribute("name", "Pokemones guardados");
+		return "pokemons";
 	}
 }

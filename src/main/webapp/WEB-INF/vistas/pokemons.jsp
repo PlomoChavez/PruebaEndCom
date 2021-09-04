@@ -25,9 +25,34 @@
 	</div>
 <div class="container mt-4">
 	<h3 class="text-center">${name}</h3>
-	<p>Nombre: ${pokemon.name}</p>
-	<p>Color: ${pokemon.color}</p>
-	<p>Tipo: ${pokemon.tipo}</p>
+	<table class="table">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Id</th>
+			<th>Apodo</th>
+			<th>Especie</th>
+			<th>Tipo</th>
+			<th>Ataque</th>
+			<th>Defensa</th>
+			<th>Salud</th>
+		</tr>
+	</thead>
+	<tbody>
+	<c:forEach var="item" items="${pokemones}" varStatus="loop">
+		<tr>
+			<td>${loop.index + num}</td>
+			<td>${item.id}</td>
+			<td>${item.apodo}</td>
+			<td>${item.especie}</td>
+			<td>${item.tipo}</td>
+			<td>${item.ataque}</td>
+			<td>${item.defensa}</td>
+			<td>${item.salud}</td>
+		</tr>
+	</c:forEach>
+	</tbody>
+	</table>
 </div>
 </body>
 </html>

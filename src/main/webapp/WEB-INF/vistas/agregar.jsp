@@ -26,18 +26,37 @@
 	</div>
 <div class="container mt-4">
 <label>Buscador</label>
-<form:form action="buscador" method="POST" modelAttribute="buscador">
+<form:form action="agregar" method="POST" modelAttribute="pokemon">
 <table>
         <tr>
-            <td><form:label path="a">Inicio</form:label></td>
-            <td><form:input path="a"/></td>
+            <td><form:label path="id">ID</form:label></td>
+            <td><form:input path="id" readonly="true"/></td>
         </tr>
         <tr>
-            <td><form:label path="b">Fin</form:label></td>
-            <td><form:input path="b"/></td>
+            <td><form:label path="apodo">Apodo</form:label></td>
+            <td><form:input path="apodo"/></td>
         </tr>
         <tr>
-            <td  colspan="2" class="text-center"><input type="submit" class="btn btn-success" value="Buscar"/></td>
+            <td><form:label path="especie">Especie:</form:label></td>
+            <td><form:input path="especie" readonly="true"/></td>
+        </tr>
+        <tr>
+            <td><form:label path="tipo">Tipo:</form:label></td>
+            <td><form:input path="tipo" readonly="true"/></td>
+        </tr>
+    </table>
+<table>
+        <tr>
+            <td><form:label path="ataque">Ataque</form:label></td>
+            <td><form:label path="defensa">Defensa</form:label></td>
+            <td><form:label path="salud">Salud</form:label></td>
+        </tr>
+            <td><form:input path="ataque" readonly="true"/></td>
+            <td><form:input path="defensa" readonly="true" /></td>
+            <td><form:input readonly="true" path="salud" /></td>
+        </tr>
+        <tr>
+            <td colspan="3" class="text-center"><input type="submit" class="btn btn-success" value="Agregar"/></td>
         </tr>
     </table>
 </form:form>
