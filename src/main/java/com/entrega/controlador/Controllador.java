@@ -36,36 +36,6 @@ public class Controllador {
 //	@Autowired
 //	private RestTemplate client;
 
-	@GetMapping("/")
-	public String listar(Model model) {
-		RestTemplate client = new RestTemplate();
-		HttpHeaders h = new HttpHeaders();
-		h.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-		ResponseEntity<String> res = client.exchange(url, HttpMethod.GET, null, String.class);
-		JSONObject jsonObj = new JSONObject(res.getBody().toString());
-		JSONArray result = jsonObj.getJSONArray("results");
-
-		ArrayList<Location> listdata = new ArrayList<Location>();
-
-		// Checking whether the JSON array has some value or not
-		if (result != null) {
-
-			// Iterating JSON array
-			for (int i = 0; i < result.length(); i++) {
-				Location t = new Location();
-				JSONObject tt = new JSONObject(result.get(i).toString());
-
-				t.setName(tt.getString("name"));
-				t.setUrl(tt.getString("url"));
-				// Adding each element of JSON array into ArrayList
-				listdata.add(t);
-			}
-		}
-		model.addAttribute("personas", listdata);
-//		return res.getBody();
-		return "index";
-	}
-
 	@RequestMapping(value = "/generacion", params = "id")
 	public String generaciones(@RequestParam String id, Model model) {
 		Integer num = 0;
